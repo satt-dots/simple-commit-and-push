@@ -1,0 +1,47 @@
+name: 'Commit and Push'
+description: 'Commits and pushes changes if any exist'
+
+inputs:
+  github-token:
+    description: 'GitHub token'
+    required: true
+
+  commit-message:
+    description: 'Commit message'
+    required: false
+    default: 'Auto commit'
+
+  user-email:
+    description: 'Git user.email'
+    required: false
+    default: 'action@github.com'
+
+  user-name:
+    description: 'Git user.name'
+    required: false
+    default: 'GitHub Action'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Commit and Push
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          git config --local user.email "$USER_EMAIL"
+          git config --local user.name "$USER_NAME"
+          git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+          git add -A
+          git commit -m "$COMMIT_MESSAGE"
+          git push origin HEAD:$BRANCH_NAME
+        else
+          echo "No changes to commit."
+        fi
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        COMMIT_MESSAGE: ${{ inputs.commit-message }}
+        # Push to the source branch (head_ref for PRs, ref_name for direct pushes)
+        BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        USER_EMAIL: ${{ inputs.user-email }}
+        USER_NAME: ${{ inputs.user-name }}
