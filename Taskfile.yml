@@ -1,0 +1,42 @@
+version: '3'
+
+tasks:
+  # General tasks
+  setup:
+    desc: "Setup tools"
+    cmds:
+      - mise trust
+      - mise install
+
+  check:
+    desc: "Check"
+    cmds:
+      - task: md:check
+
+  tag:*:
+    desc: "Create a new tag"
+    vars:
+      VERSION: "{{index .MATCH 0}}"
+    cmds:
+      - git tag -a -m "Release v{{.VERSION}}" v{{.VERSION}}
+      - git push --follow-tags
+
+  # Markdown tasks
+  md:check:
+    desc: "Check Markdown"
+    cmds:
+      - task: md:fix
+      - task: md:lint
+
+  md:fix:
+    desc: "Auto fix Markdown"
+    cmds:
+      - task: md:lint-fix
+
+  md:lint:
+    desc: "Run markdownlint on project markdown files"
+    cmd: markdownlint *.md
+
+  md:lint-fix:
+    desc: "Fix markdownlint issues automatically"
+    cmd: markdownlint *.md --fix
