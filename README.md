@@ -29,3 +29,34 @@ jobs:
 | `commit-message`  | 任意   | Auto commit           | コミットメッセージ |
 | `user-email`      | 任意   | <action@github.com>     | コミット Author の email |
 | `user-name`       | 任意   | GitHub Action         | コミット Author 名 |
+
+## 開発者向け
+
+### 必要なもの
+
+- [Taskfile](https://taskfile.dev/)
+- [mise](https://mise.jdx.dev/)
+
+### クイックスタート
+
+1. ツールのセットアップ
+
+    ```bash
+    task setup
+    ```
+
+2. チェック
+
+    ```bash
+    task check
+    ```
+
+### リリース
+
+リリースタグを作り、プッシュします。
+
+例： `v1` をリリースしたいとき
+
+```bash
+task tag:1
+```
