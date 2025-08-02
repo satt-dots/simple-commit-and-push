@@ -11,6 +11,7 @@ tasks:
   check:
     desc: "Check"
     cmds:
+      - task: yml:lint
       - task: md:check
 
   tag:*:
@@ -20,6 +21,21 @@ tasks:
     cmds:
       - git tag -a -m "Release v{{.VERSION}}" v{{.VERSION}}
       - git push --follow-tags
+
+  # YAML tasks
+  yml:lint:
+    desc: "Lint YAMLs"
+    cmds:
+      - task: yml:lint:action
+      - task: yml:lint:self
+
+  yml:lint:action:
+    desc: "Lint action as YAML"
+    cmd: yamllint action.yml
+
+  yml:lint:self:
+    desc: "Lint this file as YAML"
+    cmd: yamllint Taskfile.yml
 
   # Markdown tasks
   md:check:
